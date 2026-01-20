@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Create New Bill</h2>
+
+{% if billing_customer %}
+<div style="border:2px solid green;padding:10px;margin-bottom:10px;display:flex;justify-content:space-between;">
+    <div>
+        <b>Customer Locked:</b> {{ billing_customer.name }} ({{ billing_customer.phone }})
+    </div>
+    <a href="/billing/reset-customer"
+       style="background:red;color:white;padding:5px 10px;text-decoration:none;">
+        Change Customer
+    </a>
+</div>
+{% else %}
+<div style="border:1px solid #555;padding:10px;margin-bottom:15px;">
+    <h3>Search Customer by Mobile</h3>
+    <input type="text" id="customer_phone" placeholder="Enter Mobile Number">
+    <button type="button" onclick="searchCustomer()">Search</button>
+
+    <p id="customer_status"></p>
+
+    <div id="add_customer_form" style="display:none;">
+        <h4>Add New Customer</h4>
+        <input type="text" id="new_name" placeholder="Customer Name"><br>
+        <input type="text" id="new_phone" readonly><br>
+        <button type="button" onclick="addCustomer()">Save Customer</button>
+    </div>
+</div>
+{% endif %}
+
+<div {% if not billing_customer %}style="opacity:0.4;pointer-events:none;"{% endif %}>
+
+<!-- MANUAL ADD -->
+<form method="POST" id="manualForm">
+    <select name="product_id" id="productSelect" required>
+        <option value="">Select Product</option>
+        {% for p in products %}
+        <option value="{{ p.id }}">
+            {{ p.product_name }} | ₹{{ p.price }} | GST {{ p.gst_percent }}%
+        </option>
+        {% endfor %}
+    </select>
+
+    <input type="number" name="quantity" id="quantityInput" value="1" min="1">
+
+    <button type="submit">Add Product</button>
+
+    <button type="button" onclick="startCamera()" style="margin-left:10px;">
+        📷 Scan QR
+    </button>
+
+    <span id="qrLoader" style="display:none;color:#38bdf8;margin-left:10px;">Opening camera...</span>
+</form>
+
+<hr>
+
+<div id="reader" style="width:260px;border:1px solid #333;display:none;"></div>
+
+<!-- CART -->
+<h3>Cart</h3>
+<table border="1" width="100%" cellspacing="0" cellpadding="5">
+<tr style="background:#0d47a1;color:white;">
+    <th>Product</th>
+    <th>Qty</th>
+    <th>Price</th>
+    <th>GST %</th>
+    <th>Total</th>
+    <th>Action</th>
+</tr>
+{% for i in cart %}
+<tr>
+    <td>{{ i.product_name }}</td>
+    <td>{{ i.quantity }}</td>
+    <td>{{ "%.2f"|format(i.price) }}</td>
+    <td>{{ i.gst_percent }}</td>
+    <td>{{ "%.2f"|format(i.total) }}</td>
+    <td><a href="/billing/remove/{{ i.product_id }}">Remove</a></td>
+</tr>
+{% endfor %}
+</table>
+
+{% set ns = namespace(gst_total=0) %}
+{% for i in cart %}
+    {% set ns.gst_total = ns.gst_total + ((i.total|float) * (i.gst_percent|float) / 100) %}
+{% endfor %}
+{% set grand_total = (subtotal|float) + ns.gst_total %}
+
+<p><b>Subtotal:</b> ₹{{ "%.2f"|format(subtotal) }}</p>
+<p><b>GST:</b> ₹{{ "%.2f"|format(ns.gst_total) }}</p>
+<h3>Grand Total: ₹{{ "%.2f"|format(grand_total) }}</h3>
+
+<button onclick="saveBill()">Save Bill</button>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/html5-qrcode.min.js') }}"></script>
+
+<script>
+function searchCustomer(){
+    let phone = document.getElementById("customer_phone").value;
+    fetch("/billing/search-customer?phone=" + phone)
+    .then(r => r.json())
+    .then(d => {
+        if(d.status === "found"){
+            location.reload();
+        } else {
+            document.getElementById("customer_status").innerText = "Customer not found. Add new.";
+            document.getElementById("add_customer_form").style.display = "block";
+            document.getElementById("new_phone").value = phone;
+        }
+    });
+}
+
+function addCustomer(){
+    fetch("/billing/add-customer", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+            customer_name: document.getElementById("new_name").value,
+            phone: document.getElementById("new_phone").value
+        })
+    }).then(() => location.reload());
+}
+
+function saveBill(){
+    window.location.href = "/billing/save";
+}
+
+let html5QrCode = null;
+
+function playBeep(){
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    osc.type = "sine";
+    osc.frequency.value = 800;
+    osc.connect(ctx.destination);
+    osc.start();
+    setTimeout(()=>osc.stop(),150);
+}
+
+function startCamera(){
+    document.getElementById("qrLoader").style.display = "inline";
+    document.getElementById("reader").style.display = "block";
+
+    if (!html5QrCode) {
+        html5QrCode = new Html5Qrcode("reader");
+    }
+
+    Html5Qrcode.getCameras().then(devices => {
+        document.getElementById("qrLoader").style.display = "none";
+
+        html5QrCode.start(devices[0].id, { fps: 10, qrbox: 200 }, qrText => {
+            playBeep();
+            stopCamera();
+            applyScannedProduct(qrText);
+        });
+    });
+}
+
+function stopCamera(){
+    if (html5QrCode) {
+        html5QrCode.stop();
+        document.getElementById("reader").style.display = "none";
+    }
+}
+
+function applyScannedProduct(productId){
+    let select = document.getElementById("productSelect");
+    select.value = productId;
+    document.getElementById("quantityInput").focus();
+}
+</script>
+
+{% endblock %}

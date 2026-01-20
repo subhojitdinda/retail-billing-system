@@ -1,0 +1,178 @@
+/* ========== RESET ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* ========== BODY ========== */
+body {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+/* ========== TOPBAR ========== */
+.topbar {
+    background: #2563eb;
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.theme-btn {
+    background: #1e40af;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+    width: 220px;
+    background: #e2e8f0;
+    position: fixed;
+    top: 48px;
+    bottom: 0;
+    left: 0;
+    padding-top: 10px;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px 15px;
+    color: #0f172a;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.sidebar a:hover {
+    background: #c7d2fe;
+}
+
+/* ========== MAIN ========== */
+.main {
+    margin-left: 240px;
+    padding: 20px;
+}
+
+/* ========== HEADINGS ========== */
+h1, h2 {
+    margin-bottom: 15px;
+}
+
+/* ========== DASHBOARD MENU ========== */
+ul {
+    list-style: none;
+    max-width: 400px;
+}
+
+ul li {
+    background: white;
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.08);
+}
+
+ul li a {
+    text-decoration: none;
+    color: #2563eb;
+    font-weight: 600;
+}
+
+/* ========== FORM ========== */
+form {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+    max-width: 500px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.08);
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+}
+
+button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+/* ========== TABLE ========== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 0 6px rgba(0,0,0,0.08);
+}
+
+table th {
+    background: #2563eb;
+    color: white;
+    padding: 10px;
+}
+
+table td {
+    padding: 10px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+table tr:hover {
+    background: #f1f5f9;
+}
+
+/* ========== LOGIN PAGE ========== */
+.login-container {
+    width: 360px;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin: 100px auto;
+    box-shadow: 0 0 25px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.login-container h1 {
+    color: #2563eb;
+    margin-bottom: 20px;
+}
+
+.login-footer {
+    margin-top: 15px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* ========== ERROR MESSAGE ========== */
+.error {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}

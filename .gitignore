@@ -1,0 +1,19 @@
+# Database folders & files
+database/
+*.db
+*.sqlite3
+
+# Word documents
+*.docx
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+env/
+
+# OS junk
+.DS_Store
+Thumbs.db

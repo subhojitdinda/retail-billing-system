@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>GST Management</h2>
+
+<form method="POST">
+    <input type="text" name="gst_name" placeholder="GST Name (e.g. GST 18%)" required>
+    <input type="number" step="0.01" name="gst_percent" placeholder="GST Percentage" required>
+    <button type="submit">Add GST</button>
+</form>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>GST Name</th>
+        <th>GST %</th>
+        <th>Action</th>
+    </tr>
+    {% for gst in gst_list %}
+    <tr>
+        <td>{{ gst.id }}</td>
+        <td>{{ gst.gst_name }}</td>
+        <td>{{ gst.gst_percent }}</td>
+        <td>
+            <a href="/admin/gst/delete/{{ gst.id }}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

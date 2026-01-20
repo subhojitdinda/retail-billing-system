@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Role Management</h2>
+
+<form method="POST">
+    <input type="text" name="role_name" placeholder="Role Name" required>
+    <input type="text" name="description" placeholder="Description">
+    <button type="submit">Add Role</button>
+</form>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Role Name</th>
+        <th>Description</th>
+        <th>Action</th>
+    </tr>
+
+    {% for role in roles %}
+    <tr>
+        <td>{{ role.id }}</td>
+        <td>{{ role.role_name }}</td>
+        <td>{{ role.description }}</td>
+        <td>
+            {% if role.role_name != 'Admin' %}
+                <a href="/admin/roles/delete/{{ role.id }}">Delete</a>
+            {% else %}
+                Protected
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

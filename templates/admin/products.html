@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Product Management</h2>
+
+<form method="POST" id="productForm">
+    <input type="hidden" name="product_id" id="product_id">
+
+    <input type="text" name="product_name" id="product_name" placeholder="Product Name" required>
+    <input type="number" step="0.01" name="price" id="price" placeholder="Price" required>
+    <input type="number" name="stock" id="stock" placeholder="Stock Quantity" required>
+
+    <select name="gst_id" id="gst_id" required>
+        <option value="">Select GST</option>
+        {% for g in gst_list %}
+            <option value="{{ g.id }}">{{ g.gst_percent }}% GST</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Save Product</button>
+</form>
+
+<hr>
+
+<table width="100%" border="1" cellspacing="0" cellpadding="5">
+    <tr style="background:#0d47a1;color:white;">
+        <th>ID</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>GST</th>
+        <th>Action</th>
+    </tr>
+
+    {% for p in products %}
+    <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.product_name }}</td>
+        <td>{{ "%.2f"|format(p.price) }}</td>
+        <td>{{ p.stock }}</td>
+        <td>{{ p.gst_percent }}%</td>
+        <td>
+            <!-- EDIT BUTTON -->
+            <button
+                onclick="editProduct('{{ p.id }}','{{ p.product_name }}','{{ p.price }}','{{ p.stock }}','{{ p.gst_id }}')">
+                Edit
+            </button>
+
+            <!-- QR GENERATE BUTTON -->
+            <a href="/inventory/qr/generate/{{ p.id }}"
+               style="margin-left:6px;padding:4px 8px;background:#16a34a;color:white;
+                      text-decoration:none;border-radius:4px;">
+                QR
+            </a>
+
+            <!-- DELETE BUTTON -->
+            <a href="/admin/products/delete/{{ p.id }}"
+               style="margin-left:6px;color:red;"
+               onclick="return confirm('Are you sure to delete this product?')">
+               Delete
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<script>
+function editProduct(id, name, price, stock, gst_id){
+    document.getElementById("product_id").value = id;
+    document.getElementById("product_name").value = name;
+    document.getElementById("price").value = price;
+    document.getElementById("stock").value = stock;
+    document.getElementById("gst_id").value = gst_id;
+}
+</script>
+
+{% endblock %}

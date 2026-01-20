@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/html5-qrcode@2.3.9/html5-qrcode.min.js"></script>
+
+    <title>Retail Billing System</title>
+    {% if session.get('user_id') %}
+        {% set theme = theme if theme else 'light' %}
+    {% endif %}
+
+    {% if theme == 'dark' %}
+        <link rel="stylesheet" href="/static/css/dark.css">
+    {% else %}
+        <link rel="stylesheet" href="/static/css/style.css">
+    {% endif %}
+</head>
+<body>
+
+<div class="topbar">
+    <span>
+        User: {{ session.get('username') }} |
+        Role: {{ session.get('role') }}
+    </span>
+    <div>
+        <a href="/toggle-theme" class="theme-btn">Toggle Theme</a>
+        <a href="/logout" class="theme-btn" style="background:#dc2626;">Logout</a>
+    </div>
+</div>
+
+<div class="sidebar">
+    <h2>Retail System</h2>
+    <a href="/dashboard/admin">Admin</a>
+    <a href="/dashboard/cashier">Cashier</a>
+    <a href="/dashboard/inventory">Inventory</a>
+</div>
+
+<div class="main">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

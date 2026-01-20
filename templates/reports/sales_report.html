@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Sales Reports</h2>
+
+<h3>Daily Sales</h3>
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Total Sales</th>
+    </tr>
+    {% for d in daily_sales %}
+    <tr>
+        <td>{{ d.sale_date }}</td>
+        <td>₹ {{ d.total }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+
+<h3>Monthly Sales</h3>
+<table>
+    <tr>
+        <th>Month</th>
+        <th>Total Sales</th>
+    </tr>
+    {% for m in monthly_sales %}
+    <tr>
+        <td>{{ m.sale_month }}</td>
+        <td>₹ {{ m.total }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+
+<h3>Product Wise Sales</h3>
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Total Quantity Sold</th>
+        <th>Total Amount</th>
+    </tr>
+    {% for p in product_sales %}
+    <tr>
+        <td>{{ p.product_name }}</td>
+        <td>{{ p.total_qty }}</td>
+        <td>₹ {{ p.total_amount }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

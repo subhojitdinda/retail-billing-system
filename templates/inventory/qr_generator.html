@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>QR Code Generator (Inventory Manager)</h2>
+
+<table width="100%" border="1" cellspacing="0" cellpadding="6">
+    <tr style="background:#0d47a1;color:white;">
+        <th>ID</th>
+        <th>Product</th>
+        <th>QR Code</th>
+        <th>Action</th>
+    </tr>
+
+    {% for p in products %}
+    <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.product_name }}</td>
+        <td align="center">
+            {% if p.qr_code %}
+                <img src="/static/qr/{{ p.qr_code }}" width="80"><br>
+                <small>{{ p.qr_code }}</small>
+            {% else %}
+                <span style="color:red;">Not Generated</span>
+            {% endif %}
+        </td>
+        <td>
+            <!-- Generate QR -->
+            <a href="/inventory/qr/generate/{{ p.id }}"
+               style="padding:4px 8px;background:#16a34a;color:white;
+                      text-decoration:none;border-radius:4px;">
+                Generate QR
+            </a>
+
+            {% if p.qr_code %}
+            <!-- Print QR -->
+            <a href="/inventory/qr/print/{{ p.id }}"
+               target="_blank"
+               style="margin-left:6px;padding:4px 8px;background:#2563eb;
+                      color:white;text-decoration:none;border-radius:4px;">
+                Print
+            </a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

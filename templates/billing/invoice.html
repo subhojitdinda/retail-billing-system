@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Invoice</title>
+<style>
+body{
+    font-family: Arial;
+    background:#111;
+    color:#fff;
+}
+.invoice-box{
+    width:500px;
+    margin:auto;
+    border:2px solid #0a84ff;
+    padding:20px;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+th,td{
+    border:1px solid #444;
+    padding:6px;
+    text-align:center;
+}
+.total-box{
+    margin-top:15px;
+    text-align:right;
+}
+</style>
+</head>
+<body>
+
+<div class="invoice-box">
+    <h2 style="text-align:center;">Retail Billing Invoice</h2>
+    <p><b>Bill ID:</b> {{ bill.id }}</p>
+    <p><b>Customer:</b> {{ bill.customer_name }} ({{ bill.phone }})</p>
+
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+        {% for i in items %}
+        <tr>
+            <td>{{ i.product_name }}</td>
+            <td>{{ i.quantity }}</td>
+            <td>{{ i.price }}</td>
+            <td>{{ i.quantity * i.price }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="total-box">
+        <p>Sub Total : ₹ {{ bill.total_amount }}</p>
+        <p>GST : ₹ {{ bill.gst_amount }}</p>
+        <hr>
+        <h3>Grand Total : ₹ {{ bill.grand_total }}</h3>
+    </div>
+</div>
+
+</body>
+</html>

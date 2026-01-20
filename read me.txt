@@ -1,0 +1,51 @@
+retail_billing_system/
+│
+├── app.py                     # Main Python application entry
+│
+├── config/
+│   └── db_config.py           # MySQL database connection settings
+│
+├── database/
+│   └── schema.sql             # All MySQL table creation scripts
+│
+├── static/
+│   ├── css/
+│   │   ├── style.css          # Main light theme
+│   │   └── dark.css           # Dark mode theme
+│   │
+│   └── images/                # Logos, icons (if needed)
+│
+├── templates/
+│   ├── auth/
+│   │   └── login.html         # Login page
+│   │
+│   ├── dashboard/
+│   │   ├── admin.html         # Admin dashboard
+│   │   ├── cashier.html       # Cashier dashboard
+│   │   └── inventory.html     # Inventory Manager dashboard
+│   │
+│   ├── admin/
+│   │   ├── users.html         # Manage users
+│   │   ├── roles.html         # Manage roles
+│   │   ├── products.html      # Manage products
+│   │   └── gst.html           # Manage GST slabs
+│   │
+│   ├── billing/
+│   │   └── billing.html       # Billing screen
+│   │
+│   └── base.html              # Common layout (sidebar, header)
+│
+├── modules/
+│   ├── auth.py                # Login, logout, session handling
+│   ├── roles.py               # Role-based authorization logic
+│   ├── users.py               # User management
+│   ├── products.py            # Product management
+│   ├── gst.py                 # GST management
+│   ├── billing.py             # Billing logic
+│   └── settings.py            # Dark mode and system settings
+│
+├── utils/
+│   ├── security.py            # Password hashing, verification
+│   └── helpers.py             # Common reusable functions
+│
+└── README.md                  # Project instructions
