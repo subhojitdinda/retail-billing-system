@@ -29,9 +29,35 @@
 
 <div class="sidebar">
     <h2>Retail System</h2>
-    <a href="/dashboard/admin">Admin</a>
-    <a href="/dashboard/cashier">Cashier</a>
-    <a href="/dashboard/inventory">Inventory</a>
+
+    <!-- ================= ADMIN ================= -->
+    {% if session.get('role') == 'Admin' %}
+        <a href="/dashboard/admin">📊 Dashboard</a>
+        <a href="/admin/roles">🧩 Manage Roles</a>
+        <a href="/admin/users">👤 Manage Users</a>
+        <a href="/admin/gst">💰 Manage GST</a>
+        <a href="/admin/products">📦 Manage Products</a>
+        <a href="/customers">🧾 Manage Customers</a>
+        <a href="/reports/sales">📈 Sales Reports</a>
+    {% endif %}
+
+    <!-- ================= CASHIER ================= -->
+    {% if session.get('role') == 'Cashier' %}
+        <a href="/dashboard/cashier">🏠 Dashboard</a>
+        <a href="/billing">🧾 New Bill</a>
+        <a href="/billing/history">📜 Bill History</a>
+    {% endif %}
+
+    <!-- ================= INVENTORY MANAGER ================= -->
+    {% if session.get('role') == 'Inventory Manager' %}
+        <a href="/dashboard/inventory">🏠 Dashboard</a>
+
+        <!-- Full Product Control (Same as Admin) -->
+        <a href="/inventory/products">📦 Manage Products</a>
+
+        <!-- QR Management -->
+        <a href="/inventory/qr">🔳 Inventory QR</a>
+    {% endif %}
 </div>
 
 <div class="main">

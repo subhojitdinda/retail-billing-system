@@ -1,10 +1,24 @@
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, session
 from config.db_config import get_db_connection
+
+
+def _get_redirect_base():
+    """
+    Decide where to redirect after save/delete based on role.
+    Admin  -> /admin/products
+    Inventory Manager -> /inventory/products
+    """
+    role = session.get("role")
+    if role == "Inventory Manager":
+        return "/inventory/products"
+    return "/admin/products"
 
 
 def manage_products():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
+
+    redirect_base = _get_redirect_base()
 
     # Add or Update Product
     if request.method == "POST":
@@ -14,7 +28,7 @@ def manage_products():
         stock = request.form["stock"]
         gst_id = request.form["gst_id"]
 
-        # 🔥 Fetch GST Percentage from gst table
+        # Fetch GST Percentage
         cursor.execute("SELECT gst_percent FROM gst WHERE id=%s", (gst_id,))
         gst_row = cursor.fetchone()
         gst_percent = gst_row["gst_percent"] if gst_row else 0
@@ -36,13 +50,14 @@ def manage_products():
             """, (product_name, price, stock, gst_id, gst_percent))
 
         conn.commit()
-        return redirect("/admin/products")
+        conn.close()
+        return redirect(redirect_base)
 
-    # Fetch GST slabs for dropdown
+    # Fetch GST slabs
     cursor.execute("SELECT * FROM gst")
     gst_list = cursor.fetchall()
 
-    # Fetch products with GST %
+    # Fetch products
     cursor.execute("""
         SELECT products.*, gst.gst_percent AS gst_master_percent
         FROM products 
@@ -52,7 +67,12 @@ def manage_products():
     products = cursor.fetchall()
 
     conn.close()
-    return render_template("admin/products.html", products=products, gst_list=gst_list)
+
+    return render_template(
+        "admin/products.html",
+        products=products,
+        gst_list=gst_list
+    )
 
 
 def delete_product(product_id):
@@ -63,4 +83,5 @@ def delete_product(product_id):
     conn.commit()
     conn.close()
 
-    return redirect("/admin/products")
+    redirect_base = _get_redirect_base()
+    return redirect(redirect_base)

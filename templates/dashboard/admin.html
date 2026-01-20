@@ -1,14 +1,137 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Admin Dashboard</h1>
-<ul>
-    <li><a href="/admin/roles">Manage Roles</a></li>
-    <li><a href="/admin/users">Manage Users</a></li>
-    <li><a href="/admin/gst">Manage GST</a></li>
-    <li><a href="/admin/products">Manage Products</a></li>
-    <li><a href="/customers">Manage Customers</a></li>
-    <li><a href="/reports/sales">Sales Reports</a></li>
-</ul>
+<h1 style="margin-bottom:20px;">📊 Admin Dashboard</h1>
+
+<!-- STAT CARDS -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:25px;">
+    <div class="card">
+        Total Sales<br>
+        <b>₹ {{ total_sales or 0 }}</b>
+    </div>
+
+    <div class="card">
+        Today Sales<br>
+        <b>₹ {{ today_sales or 0 }}</b>
+    </div>
+
+    <div class="card">
+        Total Bills<br>
+        <b>{{ total_bills or 0 }}</b>
+    </div>
+
+    <div class="card">
+        Total Products<br>
+        <b>{{ total_products or 0 }}</b>
+    </div>
+</div>
+
+<!-- CHART AREA -->
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;">
+    <div class="chart-box">
+        <h3>Monthly Sales</h3>
+        <canvas id="salesChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h3>Top Products</h3>
+        <canvas id="productChart"></canvas>
+    </div>
+</div>
+
+<!-- STYLES -->
+<style>
+.card{
+    background:#111827;
+    padding:20px;
+    border-radius:10px;
+    text-align:center;
+    color:#e5e7eb;
+    box-shadow:0 0 5px #000;
+    font-size:16px;
+}
+.card b{
+    font-size:20px;
+    color:#38bdf8;
+}
+.chart-box{
+    background:#111827;
+    padding:15px;
+    border-radius:10px;
+    color:#e5e7eb;
+}
+</style>
+
+<!-- CHART JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+/* Monthly Sales Chart */
+const monthlyLabels = {{ monthly_labels | tojson }};
+const monthlySales = {{ monthly_sales | tojson }};
+
+const salesChart = new Chart(document.getElementById('salesChart'), {
+    type: 'line',
+    data: {
+        labels: monthlyLabels,
+        datasets: [{
+            label: 'Sales (₹)',
+            data: monthlySales,
+            borderColor: '#38bdf8',
+            backgroundColor: 'rgba(56,189,248,0.25)',
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                labels: { color: "#e5e7eb" }
+            }
+        },
+        scales: {
+            x: {
+                ticks: { color: "#e5e7eb" }
+            },
+            y: {
+                ticks: { color: "#e5e7eb" }
+            }
+        }
+    }
+});
+
+/* Top Products Chart */
+const productLabels = {{ top_product_labels | tojson }};
+const productValues = {{ top_product_values | tojson }};
+
+const productChart = new Chart(document.getElementById('productChart'), {
+    type: 'bar',
+    data: {
+        labels: productLabels,
+        datasets: [{
+            label: 'Quantity Sold',
+            data: productValues,
+            backgroundColor: '#22c55e'
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                labels: { color: "#e5e7eb" }
+            }
+        },
+        scales: {
+            x: {
+                ticks: { color: "#e5e7eb" }
+            },
+            y: {
+                ticks: { color: "#e5e7eb" }
+            }
+        }
+    }
+});
+</script>
 
 {% endblock %}
